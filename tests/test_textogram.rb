@@ -60,3 +60,25 @@ class TestHistogram < Minitest::Test
     assert_equal test_textogram.histogram, { }
   end
 end
+
+class TestOutput < Minitest::Test
+  def test_no_case_sensitivity_and_a_symbol
+    test_textogram = Textogram.new("HELLO World!", false, true, true)
+    assert_output("! *\nd *\ne *\nh *\nl ***\no **\nr *\nw *\n") { test_textogram.to_s }
+  end
+
+  def test_case_sensitivity_and_symbols_and_no_numbers
+    test_textogram = Textogram.new("aoS!?ien2o3rn", true, true, false)
+    assert_output("! *\n? *\nS *\na *\ne *\ni *\nn **\no **\nr *\n") { test_textogram.to_s }
+  end
+
+  def test_case_sensitivity_and_symbols_and_numbers
+    test_textogram = Textogram.new("aoS!?ien2o3rn", true, true, true)
+    assert_output("! *\n2 *\n3 *\n? *\nS *\na *\ne *\ni *\nn **\no **\nr *\n") { test_textogram.to_s }
+  end
+
+  def test_empty_string
+    test_textogram = Textogram.new("", true, true, false)
+    assert_output("") { test_textogram.to_s }
+  end
+end

@@ -42,15 +42,3 @@ class Textogram
   end
 
 end
-
-# test_textogram = Textogram.new("HELLO World!", false, true, true)
-# test_textogram.to_s
-# puts "\n\n"
-
-# test_textogram = Textogram.new("aoS!?ien2o3rn", true, true, false)
-# test_textogram.to_s
-# puts "\n\n"
-
-# test_textogram = Textogram.new("", true, true, false)
-# test_textogram.to_s
-# puts "\n\n"
