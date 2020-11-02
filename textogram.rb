@@ -5,14 +5,15 @@ class Textogram
   attr_reader :input
   attr_reader :case_sensitive
   attr_reader :incl_special_characters
-  attr_reader :split_character
+  attr_reader :incl_numbers
+  attr_reader :histogram
 
-  def initialize(input, case_sensitive = "N", incl_special_characters = "Y", incl_numbers = "Y")
+  def initialize(input, case_sensitive = false, incl_special_characters = true, incl_numbers = true)
 
     @input = input.to_s
-    @case_sensitive = verify_specs(case_sensitive)
-    @incl_special_characters = verify_specs(incl_special_characters)
-    @incl_numbers = verify_specs(incl_numbers)
+    @case_sensitive = case_sensitive
+    @incl_special_characters = incl_special_characters
+    @incl_numbers = incl_numbers
 
     @input.downcase! unless @case_sensitive
     @content_for_histogram = @input.split(//)
@@ -27,11 +28,11 @@ class Textogram
       key = i.to_sym
       @histogram[key] == nil ? @histogram[key] = 1 : @histogram[key] += 1
     end
-    
+    @histogram
+
   end
 
   def to_s
-    # print the histogram, characters should be sorted
     @printout = @histogram.sort
     @printout.each do |i|
       print "#{ i.first } "
@@ -40,18 +41,16 @@ class Textogram
     end
   end
 
-  def verify_specs(specification)
-    if specification.upcase == "Y"
-      true
-    elsif specification.upcase == "N"
-      false
-    else
-      raise "Must enter 'Y' or 'N' for all specifications"
-    end
-  end
-
 end
 
-test_textogram = Textogram.new("HELLO World!", "N", "Y", "Y")#("aoS!?ien2o3rn", "Y", "Y", "Y")
-test_textogram.to_s
-puts "\n"
+# test_textogram = Textogram.new("HELLO World!", false, true, true)
+# test_textogram.to_s
+# puts "\n\n"
+
+# test_textogram = Textogram.new("aoS!?ien2o3rn", true, true, false)
+# test_textogram.to_s
+# puts "\n\n"
+
+# test_textogram = Textogram.new("", true, true, false)
+# test_textogram.to_s
+# puts "\n\n"
