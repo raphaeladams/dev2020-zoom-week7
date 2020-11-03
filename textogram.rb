@@ -2,10 +2,6 @@
 # Raphael Adams
 
 class Textogram
-  attr_reader :input
-  attr_reader :case_sensitive
-  attr_reader :incl_special_characters
-  attr_reader :incl_numbers
   attr_reader :histogram_letters
   attr_reader :histogram_words
 
@@ -18,8 +14,11 @@ class Textogram
 
     @input.downcase! unless @case_sensitive
 
-    @histogram_letters = generate_histogram(@input.split(//))
-    @histogram_words = generate_histogram(@input.split(" "))
+    letters = filter(@input.split(//))
+    words = filter(@input.split(" "))
+
+    @histogram_letters = letters.tally
+    @histogram_words = words.tally
 
   end
 
@@ -34,29 +33,21 @@ class Textogram
 
   private
 
-  def generate_histogram(array)
+  def filter(array)
     array.reject! { |i| i[/\s/] }
     array.reject! { |i| i[/\W/] } unless @incl_special_characters
     array.reject! { |i| i[/\d/] } unless @incl_numbers
-
-    histogram = Hash.new
-
-    array.each do |i|
-      key = i.to_sym
-      histogram[key] == nil ? histogram[key] = 1 : histogram[key] += 1
-    end
-    
-    histogram
+    array
   end
 
-  def print_histogram(array)
-    if array.empty?
+  def print_histogram(hash)
+    if hash.empty?
       puts "Nothing to print"
       return
     end
 
-    printout = array.sort
-    printout.each do |i|
+    print_list = hash.sort
+    print_list.each do |i|
       print "#{ i.first } ".ljust(10)
       i.last.times { print "*" }
       print "\n"
@@ -66,7 +57,9 @@ class Textogram
 end
 
 
-project_gutenberg_textogram = Textogram.new(File.read("GreekBiology_Singer.txt").strip, false, false, false)
-puts project_gutenberg_textogram.histogram_letters
-puts project_gutenberg_textogram.histogram_words
-project_gutenberg_textogram.to_s
+# # Project Gutenberg test
+# text = File.read("GreekBiology_Singer.txt").strip
+# project_gutenberg_textogram = Textogram.new(text, false, false, false)
+# puts project_gutenberg_textogram.histogram_letters
+# puts project_gutenberg_textogram.histogram_words
+# project_gutenberg_textogram.to_s
